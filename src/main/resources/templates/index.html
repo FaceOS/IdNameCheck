@@ -14,7 +14,7 @@
     <blockquote class="layui-elem-quote layui-text">
         身份实名制验证
     </blockquote>
-
+    <input  accept="image/png,image/jpeg" type="file">
     <form id="uploadForm" class="layui-form layui-form-pane" action="">
 
         <div id="photo" class="layui-upload" style="display: none">
@@ -137,11 +137,11 @@
             }
             , error: function () {
                 //演示失败状态，并实现重传
-                var demoText = $('#demoText');
-                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
-                demoText.find('.demo-reload').on('click', function () {
-                    uploadInst.upload();
-                });
+                // var demoText = $('#demoText');
+                // demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                // demoText.find('.demo-reload').on('click', function () {
+                //     uploadInst.upload();
+                // });
             }
         });
     });

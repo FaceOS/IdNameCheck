@@ -3,6 +3,7 @@ package com.renren.faceos.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.renren.faceos.domain.IdName;
+import com.renren.faceos.utils.Base64Utils;
 import com.renren.faceos.utils.HttpClientUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ public class IdCardController {
         String faceBase64 = jsonObject.getString("FaceBase64");
         String cardNo = jsonObject.getString("CardNo");
 
+
         IdName idName = new IdName();
         idName.setLoginName("faceos");
         idName.setPwd("faceos");
@@ -38,7 +40,11 @@ public class IdCardController {
         } else {
             url = "https://49.233.242.197:8313/CreditFunc/v2.1/IdNamePhotoCheck";
             idName.setServiceName("IdNamePhotoCheck");
-            paramBean.setImage(faceBase64);
+            //压缩BASE64
+            String imageZoom = Base64Utils.compressPicForScale(faceBase64, 90);
+            if (imageZoom != null) {
+                paramBean.setImage(imageZoom);
+            }
         }
         idName.setParam(paramBean);
 
