@@ -1,9 +1,9 @@
 package com.renren.faceos.utils;
 
 import org.springframework.web.multipart.MultipartFile;
+import sun.misc.BASE64Decoder;
 
 import java.io.*;
-import java.util.Base64;
 
 /**
  * @auther pengjiaxin@faceos.com
@@ -12,26 +12,24 @@ import java.util.Base64;
  */
 public class Base64DecodedMultipartFile implements MultipartFile {
     private final byte[] imgContent;
-    private final String header;
 
     public Base64DecodedMultipartFile(byte[] imgContent, String header) {
         this.imgContent = imgContent;
-        this.header = header.split(";")[0];
     }
 
     @Override
     public String getName() {
-        return System.currentTimeMillis() + Math.random() + "." + header.split("/")[1];
+        return System.currentTimeMillis() + Math.random() + "";
     }
 
     @Override
     public String getOriginalFilename() {
-        return System.currentTimeMillis() + (int) Math.random() * 10000 + "." + header.split("/")[1];
+        return System.currentTimeMillis() + (int) Math.random() * 10000 + ".";
     }
 
     @Override
     public String getContentType() {
-        return header.split(":")[1];
+        return "image/jpg";
     }
 
     @Override
@@ -60,17 +58,20 @@ public class Base64DecodedMultipartFile implements MultipartFile {
     }
 
     public static MultipartFile base64ToMultipart(String base64) {
-        String[] baseStrs = base64.split(",");
-
-        Base64.Decoder decoder = Base64.getDecoder();
+        BASE64Decoder decoder = new BASE64Decoder();
         byte[] b = new byte[0];
-        b = decoder.decode(baseStrs[1]);
+        try {
+            b = decoder.decodeBuffer(base64);
 
-        for (int i = 0; i < b.length; ++i) {
-            if (b[i] < 0) {
-                b[i] += 256;
+            for (int i = 0; i < b.length; ++i) {
+                if (b[i] < 0) {
+                    b[i] += 256;
+                }
             }
+            return new Base64DecodedMultipartFile(b, base64);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
-        return new Base64DecodedMultipartFile(b, baseStrs[0]);
     }
 }

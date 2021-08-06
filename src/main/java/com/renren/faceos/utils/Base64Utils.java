@@ -146,14 +146,19 @@ public class Base64Utils {
                  * .toOutputStream(OutputStream os) 无返回，写入outputStream里;
                  *
                  */
-                MultipartFile multipartFile = Base64DecodedMultipartFile.base64ToMultipart("data:image/jpg;base64," + base64);
-                ByteArrayInputStream inputStream = new ByteArrayInputStream(multipartFile.getBytes());
-                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                Thumbnails.of(inputStream)
-                        .scale(accuracy)
-                        .outputQuality(accuracy).toOutputStream(outputStream);
-                base64 = encoder.encodeToString(outputStream.toByteArray());
-                accuracy -= 0.1f;
+                MultipartFile multipartFile = Base64DecodedMultipartFile.base64ToMultipart(base64);
+                if (multipartFile != null) {
+                    ByteArrayInputStream inputStream = new ByteArrayInputStream(multipartFile.getBytes());
+                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                    Thumbnails.of(inputStream)
+                            .scale(accuracy)
+                            .outputQuality(accuracy).toOutputStream(outputStream);
+                    base64 = encoder.encodeToString(outputStream.toByteArray());
+                    accuracy -= 0.1f;
+                } else {
+                    System.out.println("图片压缩失败");
+                    return null;
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
